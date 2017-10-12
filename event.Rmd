@@ -14,8 +14,10 @@ counts <- table(eventattendance$EventType)
 barplot(counts, main="EventType", xlab="Number of Audience")
 ```
 
+6 diffent event types, plot shows the frequency people attend the most.
+will explore more
 
-
+interesting will be to comare with those who enroll into college
 
 
 
