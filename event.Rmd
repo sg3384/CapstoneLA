@@ -1,0 +1,21 @@
+---
+title: "Untitled"
+author: "Shreya"
+date: "October 12, 2017"
+output: html_document
+---
+
+```{r}
+summary(eventattendance)
+```
+
+```{r}
+counts <- table(eventattendance$EventType)
+barplot(counts, main="EventType", xlab="Number of Audience")
+```
+
+
+
+
+
+
