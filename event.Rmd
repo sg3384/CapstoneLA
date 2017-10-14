@@ -11,13 +11,12 @@ summary(eventattendance)
 
 ```{r}
 counts <- table(eventattendance$EventType)
-barplot(counts, main="EventType", xlab="Number of Audience")
+par(las=2)
+par(mar=c(5,15,4,2)) 
+barplot(counts, main="Event Audience Barplot", horiz=TRUE, xlab="Number of Audience", col="chartreuse3")
 ```
 
 6 diffent event types, plot shows the frequency people attend the most.
 will explore more
 
-interesting will be to comare with those who enroll into college
-
-
-
+interesting if we had some data from those who enroll to comare
