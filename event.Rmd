@@ -13,7 +13,7 @@ summary(eventattendance)
 counts <- table(eventattendance$EventType)
 par(las=2)
 par(mar=c(5,15,4,2)) 
-barplot(counts, main="Event Audience Barplot", horiz=TRUE, xlab="Number of Audience", col="chartreuse3")
+barplot(counts, main="Event Attendance Barplot", horiz=TRUE, xlab="Number of Attendees", col="chartreuse3")
 ```
 
 6 diffent event types, plot shows the frequency people attend the most.
