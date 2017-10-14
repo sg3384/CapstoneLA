@@ -123,7 +123,7 @@ Originally the data set had 2989 data points and now after removing the data poi
 
 Suggested by Charles - I went wrong on the decision of deleting the student data at all, but he suggests that we find an algorithm or may be create on to convert scores from one form to another to not lose data and utilize it well
 
-
+Also, one thing to may be consider in there is to check that we change before the particular date when this gre score system was used, irrespective of the system, we need to consider that well. - Thoughts on this Francis?
 
 
 ## Event_Attendance
