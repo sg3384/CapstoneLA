@@ -15,7 +15,23 @@ output: html_document
 
 
 
+
 ## Event_Attendance
+```{r}
+summary(eventattendance)
+```
+
+```{r}
+counts <- table(eventattendance$EventType)
+par(las=2)
+par(mar=c(5,15,4,2)) 
+barplot(counts, main="Event Attendance Barplot", horiz=TRUE, xlab="Number of Attendees", col="chartreuse3")
+```
+
+6 diffent event types, plot shows the frequency people attend the most.
+will explore more
+
+interesting if we had some data from those who enroll to comare
 
 
 
