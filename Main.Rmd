@@ -1,0 +1,30 @@
+---
+title: "Untitled"
+author: "Shreya"
+date: "October 14, 2017"
+output: html_document
+---
+## Read_Files
+
+
+
+
+
+## Gre
+
+
+
+
+## Event_Attendance
+
+
+
+## Application_Decision
+```{r}
+counts <- table(appdecision$decision_name)
+
+par(las=2)
+par(mar=c(5,16,4,2)) 
+barplot(counts, main="Decision Name Barplot", horiz=TRUE, xlab="Number of Students in each decision type", col="chartreuse3")
+```
+
