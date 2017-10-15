@@ -143,6 +143,11 @@ will explore more
 
 interesting if we had some data from those who enroll to comare
 
+This plot shows that out of the possible 4765 students we have in the master data set, only 562 paid event attendance were recorded from these students which included only 510 unique students to attend the events.
+
+We can hypothise, that students who do not attend any events may have a higher chance of not enrolling in the program even if they are offered admission.
+
+Add to appbase and check if they attended before or after submitting or offereing admission.
 
 
 ## Application_Decision
