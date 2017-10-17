@@ -159,3 +159,9 @@ par(mar=c(5,16,4,2))
 barplot(counts, main="Decision Name Barplot", horiz=TRUE, xlab="Number of Students in each decision type", col="chartreuse3")
 ```
 
+```{r}
+A <- unique(appdecision$identity)
+B <- unique(appbase$identity)
+```
+
+This tells us that there are only 4470 unique students, but there are repeats in appbase, what does that mean? why arnt they clubbed in the appbase data together
