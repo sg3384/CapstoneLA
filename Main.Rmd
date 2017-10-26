@@ -215,6 +215,9 @@ gre$Verbal_new <-
                                             gre$Verbal))))))))))))))))))))))))))))))))))))))))))))))))))
 ```
 
+We are assuming that no students obtained scores on the scale of 0 to 270 on the traditional score scale since that is a very low score to obtain. In case there are such cases in the future (which should not be the case, since this scale has been discontinued), we may want to consider updating the above code to convert. 
+
+
 
 ```{r}
 hist(gre$Verbal_new)
