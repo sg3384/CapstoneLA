@@ -125,7 +125,7 @@ Suggested by Charles - I went wrong on the decision of deleting the student data
 
 Also, one thing to may be consider in there is to check that we change before the particular date when this gre score system was used, irrespective of the system, we need to consider that well. - Thoughts on this Francis?
 
-GRE_score conversion from traditional to new scale (Shreya made the code - can't locate anything on the web
+GRE_score conversion from traditional to new scale (Shreya made the code - can't locate anything on the web and so this)
 ```{r}
 gre$Quantitative_new <- 
   ifelse(gre$Quantitative >=760, 170,
