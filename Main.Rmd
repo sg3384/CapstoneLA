@@ -280,3 +280,13 @@ B <- unique(appbase$identity)
 ```
 
 This tells us that there are only 4470 unique students, but there are repeats in appbase, what does that mean? why arnt they clubbed in the appbase data together
+
+
+
+
+
+
+## Starting with Merging data
+```{r}
+mydata <- merge(appbase, gre, by="identity", all=TRUE)
+```
