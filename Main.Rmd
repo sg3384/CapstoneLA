@@ -125,6 +125,62 @@ Suggested by Charles - I went wrong on the decision of deleting the student data
 
 Also, one thing to may be consider in there is to check that we change before the particular date when this gre score system was used, irrespective of the system, we need to consider that well. - Thoughts on this Francis?
 
+GRE_score conversion from traditional to new scale (Shreya made the code - can't locate anything on the web
+```{r}
+gre$Quantitative_new <- 
+  ifelse(gre$Quantitative >=760, 170,
+         ifelse(gre$Quantitative ==750, 169,
+                ifelse(gre$Quantitative ==740, 169,
+                       ifelse(gre$Quantitative == 730, 168,
+                              ifelse(gre$Quantitative == 720, 168,
+                                     ifelse(gre$Quantitative == 710, 167,
+                                            ifelse(gre$Quantitative == 700, 166,
+                                                   ifelse(gre$Quantitative == 690, 165,
+                                                          ifelse(gre$Quantitative == 680, 165, 
+                                                                ifelse(gre$Quantitative ==670, 164,
+         ifelse(gre$Quantitative ==660, 164,
+                ifelse(gre$Quantitative ==650, 163,
+                       ifelse(gre$Quantitative == 640, 162,
+                              ifelse(gre$Quantitative == 630, 162,
+                                     ifelse(gre$Quantitative == 620, 161,
+                                            ifelse(gre$Quantitative == 610, 160,
+                                                   ifelse(gre$Quantitative == 600, 160,
+                                                          ifelse(gre$Quantitative == 590, 159, 
+                                                                 ifelse(gre$Quantitative ==580, 158,
+         ifelse(gre$Quantitative ==570, 158,
+                ifelse(gre$Quantitative ==560, 157,
+                       ifelse(gre$Quantitative == 550, 156,
+                              ifelse(gre$Quantitative == 540, 156,
+                                     ifelse(gre$Quantitative == 530, 155,
+                                            ifelse(gre$Quantitative == 520, 154,
+                                                   ifelse(gre$Quantitative == 510, 154,
+                                                          ifelse(gre$Quantitative == 500, 153,
+                                                                 ifelse(gre$Quantitative ==490, 152,
+         ifelse(gre$Quantitative ==480, 152,
+                ifelse(gre$Quantitative ==470, 151,
+                       ifelse(gre$Quantitative == 460, 151,
+                              ifelse(gre$Quantitative == 450, 150,
+                                     ifelse(gre$Quantitative == 440, 149,
+                                            ifelse(gre$Quantitative == 430, 149,
+                                                   ifelse(gre$Quantitative == 420, 148,
+                                                          ifelse(gre$Quantitative == 410, 147,
+                                                                 ifelse(gre$Quantitative ==400, 146,
+         ifelse(gre$Quantitative ==390, 146,
+                ifelse(gre$Quantitative ==380, 145,
+                       ifelse(gre$Quantitative == 370, 144,
+                              ifelse(gre$Quantitative == 360, 143,
+                                     ifelse(gre$Quantitative == 350, 143,
+                                            ifelse(gre$Quantitative == 340, 142,
+                                                   ifelse(gre$Quantitative == 330, 141,
+                                                          ifelse(gre$Quantitative == 320, 140, 
+         ifelse(gre$Quantitative ==310, 139,
+                ifelse(gre$Quantitative ==300, 138,
+                       ifelse(gre$Quantitative == 290, 137,
+                              ifelse(gre$Quantitative == 280, 135,
+                                     ifelse(gre$Quantitative ==759, 170, 
+                                            gre$Quantitative))))))))))))))))))))))))))))))))))))))))))))))))))
+```
+
 
 ## Event_Attendance
 ```{r}
