@@ -1,6 +1,6 @@
 ---
 title: "Data Exploration Assignment Due - 4th week of October"
-author: "Shreya and Francis"
+author: "Shreya"
 date: "October 14, 2017"
 output: html_document
 ---
