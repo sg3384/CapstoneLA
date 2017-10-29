@@ -290,3 +290,177 @@ This tells us that there are only 4470 unique students, but there are repeats in
 ```{r}
 mydata <- merge(appbase, gre, by="identity", all=TRUE)
 ```
+
+
+
+
+
+## Phase I - Barplots and Histograms
+
+###1
+```{r}
+school$gpa_numeric <- ifelse(school$gpa == "NULL", NA, school$gpa)
+school$gpa_numeric <- as.numeric(school$gpa_numeric)
+range(school$gpa_numeric, na.rm = TRUE)
+```
+
+```{r}
+school$gpa_numeric <- ifelse(school$gpa == "65", NA, school$gpa)
+school$gpa_numeric <- as.numeric(school$gpa_numeric)
+```
+
+```{r}
+library(ggplot2)
+school$gpa_numeric <- as.numeric(school$gpa_numeric)
+ggplot(data=school, aes(school$gpa_numeric)) + 
+  geom_histogram(breaks=seq(0, 4.4, by = 0.2), 
+                 col="red", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "green", high = "red") +
+  labs(title="Previous School GPA Records")
+```
+
+###2
+```{r}
+school$earned_degree_num <- ifelse(school$earned_degree == "N", "No", ifelse(school$earned_degree == "Y", "Yes", school$earned_degree))
+```
+
+```{r}
+counts <- table(school$earned_degree_num)
+barplot(counts, col=c("chartreuse3"), main="Priviously: Degree Earned or Not (dropped)", xlab="Yes/No",  ylab="Number of Cases reported in total")
+```
+
+###3,4,5,6
+```{r}
+library(ggplot2)
+gre$Verbal_new <- as.numeric(gre$Verbal_new)
+ggplot(data=gre, aes(gre$Verbal_new)) + 
+  geom_histogram(breaks=seq(0, 170, by = 2), 
+                 col="chartreuse4", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "yellow", high = "chartreuse4")+
+  labs(title="Histogram for Verbal Scores recorded in the GRE", x="Verbal Score (Max = 170)", y="Number of recorded student cases")
+```
+
+```{r}
+library(ggplot2)
+gre$Quantitative_new <- as.numeric(gre$Quantitative_new)
+ggplot(data=gre, aes(gre$Quantitative_new)) + 
+  geom_histogram(breaks=seq(0, 170, by = 2), 
+                 col="blue", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "green", high = "blue")+
+  labs(title="Histogram for Quantitative Scores recorded in the GRE", x="Quantitative Score (Max = 170)", y="Number of recorded student cases")
+```
+
+```{r}
+library(ggplot2)
+gre$Writing <- as.numeric(gre$Writing)
+ggplot(data=gre, aes(gre$Writing)) + 
+  geom_histogram(breaks=seq(0, 6, by = 0.5), 
+                 col="purple4", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "orchid", high = "purple4")+
+  labs(title="Histogram for Writing Scores recorded in the GRE", x="Quantitative Score (Scale 0-6)", y="Number of recorded student cases")
+```
+
+```{r}
+gre$total <- gre$Verbal_new+gre$Quantitative_new
+```
+
+```{r}
+library(ggplot2)
+gre$total <- as.numeric(gre$total)
+ggplot(data=gre, aes(gre$total)) + 
+  geom_histogram(breaks=seq(140, 340, by = 5), 
+                 col="mediumblue", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "darkorange", high = "mediumblue")+
+  labs(title="Histogram for Verbal and Quants Scores recorded in the GRE", x="Quantitative (Max = 340)", y="Number of recorded student cases")
+```
+
+###7
+```{r}
+counts <- table(eventattendance$EventType)
+par(las=2)
+par(mar=c(5,15,4,2)) 
+barplot(counts, main="Event Attendance Barplot", horiz=TRUE, xlab="Number of Attendees", col="chartreuse3")
+```
+
+###8
+```{r}
+counts <- table(appdecision$decision_name)
+par(las=2)
+par(mar=c(5,16,4,2)) 
+barplot(counts, main="Decision Name Barplot", horiz=TRUE, xlab="Number of Students in each decision type", col="chartreuse3")
+```
+
+###9 - Needs Changes 
+```{r}
+counts <- table(appbase$`Credits Req`)
+barplot(counts, main="Number of Credits applied for or required", xlab="Number of Credits", col="blueviolet", ylab="Number of Applicants")
+```
+
+###10
+```{r}
+count1 <- table(appbase$app_number)
+barplot(count1, main="Number of App_Number", xlab="Number of Apps", col=c("chocolate4","chocolate", "chocolate2", "chocolate1", "chocolate1"), ylab="Number of Applicants")
+```
+
+
+###11
+```{r}
+appbase$sex_1 <- ifelse(appbase$sex == "NULL", "Not_Stated", appbase$sex)
+```
+
+```{r}
+count2 <- table(appbase$sex_1)
+barplot(count2, main="Gender Dominance amongst Applicants", xlab="Gender", col=c(115), ylab="Number of Applicants")
+```
+
+###12
+```{r}
+appbase$PrevApply_1 <- ifelse(appbase$PrevApply == "0", "No", "Yes")
+```
+
+```{r}
+count4 <- table(appbase$PrevApply_1)
+barplot(count4, main="Previous_Applicant or not", xlab="Previous Applicant or Not", col="violetred", ylab="Number of Applicants")
+```
+
+###13
+```{r}
+count5 <- table(appbase$EverDeposited)
+barplot(count5, main="Applicant_Deposited_Entry_Fee_or_Not", xlab="Applicant_Deposited_Entry_Fee_or_Not", ylab="Number_of_Applicants",col="olivedrab")
+```
+
+###14
+```{r}
+appbase$Scholarship_app_1 <- ifelse(appbase$Scholarship_app == "0", "No", "Yes")
+```
+
+```{r}
+count6 <- table(appbase$Scholarship_app_1)
+barplot(count6, main="Scholarship Applications", xlab="Applied_or_Not", ylab="Number of Applicants", col="hotpink4")
+```
+
+###15
+```{r}
+appbase$age_at_app_new <- ifelse(appbase$age_at_app <=16, NA, appbase$age_at_app)
+```
+
+```{r}
+appbase$age_at_app_new <- as.numeric(appbase$age_at_app_new)
+ggplot(data=appbase, aes(appbase$age_at_app_new)) + 
+  geom_histogram(breaks=seq(19, 65, by = 1), 
+                 col="orangered", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "yellow", high = "orangered")+
+  labs(title="Applicant's Age", x="Age", y="Number of Applicants")
+```
+
+###16 - Need to update to world map Francis and Shreya and Working on
+```{r}
+count3 <- table(appbase$citizenship1)
+barplot(count3, main="Citizenship_of_Applicants", xlab="First_Citizenship", ylab = "First_Citizenship", col="royalblue1")
+```
