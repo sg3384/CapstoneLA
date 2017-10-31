@@ -11,6 +11,18 @@ Also, one thing to may be consider in there is to check that we change before th
 
 Could you please update when you have the regression thing you are working on and the data exploration part as well!
 
+Following code is for your reference Francis - Since you showed interest in merging data. 
+```{r}
+library(dplyr)
+library(tidyr)
+login$count <- 1
+login2 <- login %>% group_by(identity) %>% summarize(sum(count))
+```
+```{r}
+library(corrplot)
+COR <- cor(gre) 
+corrplot(COR, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.6, tl.srt=45, addCoef.col="black", addCoefasPercent = TRUE, sig.level=0.50, insig = "blank")
+```
 
 
 ## Action Needed by Shreya (Please add any concerns or questions for Shreya here)
