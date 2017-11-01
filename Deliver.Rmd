@@ -6,15 +6,16 @@ output: html_document
 ---
 
 Content of the RMarkdown
-1. read data
-2. gre data
-3. message data
-4. login data
-5. school data (still need to be merged)
-6. event data (still need to be merged)
-7. app decision data (still need to be merged)
-8. app base data
+1. Read data
+2. Gre data
+3. Message data
+4. Login data
+5. School data (still need to be merged)
+6. Event data (still need to be merged)
+7. App decision data (still need to be merged)
+8. App base data
 9. Merge data
+10. Final Data Visualizations
 
 
 ```{r}
