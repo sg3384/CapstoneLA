@@ -305,6 +305,54 @@ This tells us that there are only 4470 unique students, but there are repeats in
 
 
 
+## Application Base
+```{r}
+table(appbase$citizenship1)
+```
+
+
+## Login Data
+```{r}
+library(dplyr)
+library(tidyr)
+login$count <- 1
+login2 <- login %>% group_by(identity) %>% summarize(sum(count))
+```
+
+## Message Data
+```{r}
+table(message$opened_or_url)
+#table(message$identity, message$opened_or_url)
+```
+What does NULL signify in Open or URL - Just using it as a not opened at all
+```{r}
+message$opened_or_url_1 <- ifelse(message$opened_or_url == "NULL", "0", 1)
+message$opened_or_url_1 <-as.numeric(message$opened_or_url_1)
+```
+
+```{r}
+library(dplyr)
+library(tidyr)
+message$count <- 1
+message2 <- message %>% group_by(identity) %>% summarize(sum(opened_or_url_1))
+message3 <- message %>% group_by(identity) %>% summarize(sum(count))
+```
+
+```{r}
+message2 <- setNames(message2, c("identity", "sum_open_or_url"))
+message3 <- setNames(message3, c("identity", "sum_num_of_messages"))
+```
+
+```{r}
+library(dplyr)
+message_main <- dplyr::full_join(message3, message2, by="identity")
+```
+
+
+
+
+
+
 
 
 
