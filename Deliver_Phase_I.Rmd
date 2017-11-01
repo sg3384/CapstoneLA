@@ -479,7 +479,7 @@ ggplot(data=appbase,aes(x=credits_req_new)) +
   geom_bar(fill="blueviolet") + 
   geom_text(stat='count',aes(label=..count..),vjust=-1, col="darkslateblue") + 
   ylim(-50, 1500) + 
-  labs(title="Priviously: Degree Earned or Not (dropped)", x="Yes/No", y="Number of Cases reported in total")+ 
+  labs(title="Degree Credits Required", x="Number of Credits", y="Number of Applicants")+ 
   theme(plot.title = element_text(face = "bold", size=15))
 ```
 11
