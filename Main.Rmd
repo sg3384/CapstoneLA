@@ -26,6 +26,23 @@ corrplot(COR, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="b
 ```
 
 
+world map ->
+```{r}
+library("ggmap")
+library(maptools)
+library(maps)
+visited <- unique(appbase$permanent_country)
+ll.visited <- geocode(visited)
+visit.x <- ll.visited$lon
+visit.y <- ll.visited$lat
+```
+
+```{r}
+map("world", fill=TRUE, col="white", bg="lightblue", ylim=c(-90,90))
+points(visit.x,visit.y, col="red", pch=16)
+```
+Francis above is the world map until where I have completed so far. In case we dont get past this, we will skip it for this time and I will make sure I make a heat map for next time. But try if you can
+
 ## Action Needed by Shreya (Please add any concerns or questions for Shreya here)
 
 
