@@ -1,0 +1,700 @@
+---
+title: "Phase I: Data Exploration"
+author: "Shreya and Francis"
+date: "October 10, 2017"
+output: html_document
+---
+
+Content of the RMarkdown
+1. Read data
+2. Gre data
+3. Message data
+4. Login data
+5. School data (still need to be merged)
+6. Event data (still need to be merged)
+7. App decision data (still need to be merged)
+8. App base data
+9. Merge data
+10. Final Data Visualizations
+
+
+```{r}
+install.packages("readxl")
+install.packages("psych")
+install.packages("ggplot2")
+install.packages("dplyr")
+install.packages("tidyr")
+```
+
+
+# Read Data
+```{r}
+library(readxl)
+appbase <- read_excel("C:/Users/Shreya/Documents/GITHUB/Capstone/ApplicationBase.xlsx")
+```
+
+```{r}
+library(readxl)
+appdecision <- read_excel("C:/Users/Shreya/Documents/GITHUB/Capstone/ApplicationDecisions.xlsx")
+```
+
+```{r}
+library(readxl)
+eventattendance <- read_excel("C:/Users/Shreya/Documents/GITHUB/Capstone/PersonEventAttendance.xlsx")
+```
+
+```{r}
+library(readxl)
+gre <- read_excel("C:/Users/Shreya/Documents/GITHUB/Capstone/PersonGRE.xlsx")
+```
+
+```{r}
+library(readxl)
+login <- read_excel("C:/Users/Shreya/Documents/GITHUB/Capstone/PersonLogins.xlsx")
+```
+
+```{r}
+library(readxl)
+message <- read_excel("C:/Users/Shreya/Documents/GITHUB/Capstone/PersonMessages.xlsx")
+```
+
+```{r}
+library(readxl)
+school <- read_excel("C:/Users/Shreya/Documents/GITHUB/Capstone/PersonSchools.xlsx")
+```
+
+
+# GRE Data
+GRE: Gre Scores of applicants with 3 main categories in these scores:
+Verbal (Range 0-170), 
+Quantitative (Range 0-170)
+Writing (Range 0-6)
+
+```{r}
+hist(gre$Verbal)
+```
+This histogram of verbal score shows that there are 2 gre scale that are currently being used in the data
+one is current scale: 0-170 (increments of 1 point) (maximum applicant population has this score range)
+other is prior / traditional scale: 0 - 800 (increments of 10 points) (changed on August 2011)
+
+```{r}
+hist(gre$Quantitative)
+```
+
+```{r}
+gre$Writing <- as.numeric(gre$Writing)
+hist(gre$Writing)
+```
+
+Maximum admitted applicants have 3 or more score level on gre writing scale of 0-6.
+
+GRE_score conversion from traditional to new scale (not needed but added)
+```{r}
+gre$Quantitative_new <- 
+  ifelse(gre$Quantitative >=760, 170,
+         ifelse(gre$Quantitative ==750, 169,
+                ifelse(gre$Quantitative ==740, 169,
+                       ifelse(gre$Quantitative == 730, 168,
+                              ifelse(gre$Quantitative == 720, 168,
+                                     ifelse(gre$Quantitative == 710, 167,
+                                            ifelse(gre$Quantitative == 700, 166,
+                                                   ifelse(gre$Quantitative == 690, 165,
+                                                          ifelse(gre$Quantitative == 680, 165, 
+                                                                ifelse(gre$Quantitative ==670, 164,
+         ifelse(gre$Quantitative ==660, 164,
+                ifelse(gre$Quantitative ==650, 163,
+                       ifelse(gre$Quantitative == 640, 162,
+                              ifelse(gre$Quantitative == 630, 162,
+                                     ifelse(gre$Quantitative == 620, 161,
+                                            ifelse(gre$Quantitative == 610, 160,
+                                                   ifelse(gre$Quantitative == 600, 160,
+                                                          ifelse(gre$Quantitative == 590, 159, 
+                                                                 ifelse(gre$Quantitative ==580, 158,
+         ifelse(gre$Quantitative ==570, 158,
+                ifelse(gre$Quantitative ==560, 157,
+                       ifelse(gre$Quantitative == 550, 156,
+                              ifelse(gre$Quantitative == 540, 156,
+                                     ifelse(gre$Quantitative == 530, 155,
+                                            ifelse(gre$Quantitative == 520, 154,
+                                                   ifelse(gre$Quantitative == 510, 154,
+                                                          ifelse(gre$Quantitative == 500, 153,
+                                                                 ifelse(gre$Quantitative ==490, 152,
+         ifelse(gre$Quantitative ==480, 152,
+                ifelse(gre$Quantitative ==470, 151,
+                       ifelse(gre$Quantitative == 460, 151,
+                              ifelse(gre$Quantitative == 450, 150,
+                                     ifelse(gre$Quantitative == 440, 149,
+                                            ifelse(gre$Quantitative == 430, 149,
+                                                   ifelse(gre$Quantitative == 420, 148,
+                                                          ifelse(gre$Quantitative == 410, 147,
+                                                                 ifelse(gre$Quantitative ==400, 146,
+         ifelse(gre$Quantitative ==390, 146,
+                ifelse(gre$Quantitative ==380, 145,
+                       ifelse(gre$Quantitative == 370, 144,
+                              ifelse(gre$Quantitative == 360, 143,
+                                     ifelse(gre$Quantitative == 350, 143,
+                                            ifelse(gre$Quantitative == 340, 142,
+                                                   ifelse(gre$Quantitative == 330, 141,
+                                                          ifelse(gre$Quantitative == 320, 140, 
+         ifelse(gre$Quantitative ==310, 139,
+                ifelse(gre$Quantitative ==300, 138,
+                       ifelse(gre$Quantitative == 290, 137,
+                              ifelse(gre$Quantitative == 280, 135,
+                                     ifelse(gre$Quantitative ==759, 170, 
+                                            gre$Quantitative))))))))))))))))))))))))))))))))))))))))))))))))))
+gre$Quantitative_new <- as.numeric(gre$Quantitative_new)
+```
+
+```{r}
+gre$Verbal_new <- 
+  ifelse(gre$Verbal >=760, 170,
+         ifelse(gre$Verbal ==750, 169,
+                ifelse(gre$Verbal ==740, 169,
+                       ifelse(gre$Verbal == 730, 168,
+                              ifelse(gre$Verbal == 720, 168,
+                                     ifelse(gre$Verbal == 710, 167,
+                                            ifelse(gre$Verbal == 700, 166,
+                                                   ifelse(gre$Verbal == 690, 165,
+                                                          ifelse(gre$Verbal == 680, 165, 
+                                                                ifelse(gre$Verbal ==670, 164,
+         ifelse(gre$Verbal ==660, 164,
+                ifelse(gre$Verbal ==650, 163,
+                       ifelse(gre$Verbal == 640, 162,
+                              ifelse(gre$Verbal == 630, 162,
+                                     ifelse(gre$Verbal == 620, 161,
+                                            ifelse(gre$Verbal == 610, 160,
+                                                   ifelse(gre$Verbal == 600, 160,
+                                                          ifelse(gre$Verbal == 590, 159, 
+                                                                 ifelse(gre$Verbal ==580, 158,
+         ifelse(gre$Verbal ==570, 158,
+                ifelse(gre$Verbal ==560, 157,
+                       ifelse(gre$Verbal == 550, 156,
+                              ifelse(gre$Verbal == 540, 156,
+                                     ifelse(gre$Verbal == 530, 155,
+                                            ifelse(gre$Verbal == 520, 154,
+                                                   ifelse(gre$Verbal == 510, 154,
+                                                          ifelse(gre$Verbal == 500, 153,
+                                                                 ifelse(gre$Verbal ==490, 152,
+         ifelse(gre$Verbal ==480, 152,
+                ifelse(gre$Verbal ==470, 151,
+                       ifelse(gre$Verbal == 460, 151,
+                              ifelse(gre$Verbal == 450, 150,
+                                     ifelse(gre$Verbal == 440, 149,
+                                            ifelse(gre$Verbal == 430, 149,
+                                                   ifelse(gre$Verbal == 420, 148,
+                                                          ifelse(gre$Verbal == 410, 147,
+                                                                 ifelse(gre$Verbal ==400, 146,
+         ifelse(gre$Verbal ==390, 146,
+                ifelse(gre$Verbal ==380, 145,
+                       ifelse(gre$Verbal == 370, 144,
+                              ifelse(gre$Verbal == 360, 143,
+                                     ifelse(gre$Verbal == 350, 143,
+                                            ifelse(gre$Verbal == 340, 142,
+                                                   ifelse(gre$Verbal == 330, 141,
+                                                          ifelse(gre$Verbal == 320, 140, 
+         ifelse(gre$Verbal ==310, 139,
+                ifelse(gre$Verbal ==300, 138,
+                       ifelse(gre$Verbal == 290, 137,
+                              ifelse(gre$Verbal == 280, 135,
+                                     ifelse(gre$Verbal ==759, 170, 
+                                            gre$Verbal))))))))))))))))))))))))))))))))))))))))))))))))))
+gre$Verbal_new <- as.numeric(gre$Verbal_new)
+```
+
+```{r}
+gre$total <- gre$Verbal_new+gre$Quantitative_new
+gre$total <- as.numeric(gre$total)
+```
+
+```{r}
+range(gre$total, na.rm=TRUE)
+```
+
+```{r}
+gre <- setNames(gre, c("identity", "gre_verbal", "gre_quantitative", "gre_writing",  "gre_quantitative_new", "gre_verbal_new", "gre_total_new"))
+```
+
+Thanks for the following Charles
+```{r}
+#z scores for scaling on same scale, irrespective of scale
+gre$gre_scale_quantitative <- scale(gre$gre_quantitative)
+gre$gre_scale_verbal <- scale(gre$gre_verbal)
+```
+
+```{r}
+gre1 <- gre[-c(1:3,5:6)]
+```
+
+```{r}
+plot(gre1)
+```
+
+
+# Message Data
+```{r}
+table(message$opened_or_url)
+#table(message$identity, message$opened_or_url)
+```
+
+```{r}
+message$opened_or_url_1 <- ifelse(message$opened_or_url == "NULL", "0", 1)
+message$opened_or_url_1 <-as.numeric(message$opened_or_url_1)
+```
+
+```{r}
+library(dplyr)
+library(tidyr)
+message$count <- 1
+message2 <- message %>% group_by(identity) %>% summarize(sum(opened_or_url_1))
+message3 <- message %>% group_by(identity) %>% summarize(sum(count))
+```
+
+```{r}
+message2 <- setNames(message2, c("identity", "sum_open_or_url_message"))
+message3 <- setNames(message3, c("identity", "sum_num_of_message"))
+```
+
+```{r}
+library(dplyr)
+message_main <- dplyr::full_join(message3, message2, by="identity")
+```
+
+
+# Login Data
+```{r}
+library(dplyr)
+library(tidyr)
+login$count <- 1
+login1 <- login %>% group_by(identity) %>% summarize(sum(count))
+```
+
+```{r}
+login1 <- setNames(login1, c("identity", "sum_login_count"))
+```
+
+
+# School Data
+```{r}
+school$gpa_numeric <- ifelse(school$gpa == "NULL", NA, school$gpa)
+school$gpa_numeric <- as.numeric(school$gpa_numeric)
+range(school$gpa_numeric, na.rm = TRUE)
+```
+
+```{r}
+school$gpa_numeric <- ifelse(school$gpa >= "5", NA, school$gpa)
+school$gpa_numeric <- as.numeric(school$gpa_numeric)
+range(school$gpa_numeric, na.rm = TRUE)
+```
+
+```{r}
+hist(school$gpa_numeric, col="chartreuse3")
+```
+
+```{r}
+table(school$earned_degree)
+```
+
+```{r}
+school$earned_degree_num <- ifelse(school$earned_degree == "N", "No", ifelse(school$earned_degree == "Y", "Yes", school$earned_degree))
+```
+
+
+# Event Data
+```{r}
+table(eventattendance$EventType)
+```
+
+```{r}
+eventattendance.unique <- unique(eventattendance$identity)
+```
+
+
+# Application Decision Data
+```{r}
+table(appdecision$decision_name)
+```
+
+
+# Application Base Data
+```{r}
+appbase$sex_1 <- ifelse(appbase$sex == "NULL", "Not_Stated", appbase$sex)
+appbase$PrevApply_1 <- ifelse(appbase$PrevApply == "0", "No", "Yes")
+appbase$Scholarship_app_1 <- ifelse(appbase$Scholarship_app == "0", "No", "Yes")
+```
+
+```{r}
+range(appbase$age_at_app)
+```
+
+```{r}
+appbase$age_at_app_new <- ifelse(appbase$age_at_app <=16, NA, appbase$age_at_app)
+appbase$age_at_app_new <- as.numeric(appbase$age_at_app_new)
+```
+
+```{r}
+appbase$credits_req <- appbase$`Credits Req`
+appbase$credits_req_new <- 
+  ifelse(appbase$credits_req ==32, "32",
+         
+  ifelse(appbase$credits_req ==33, "33-36",
+  ifelse(appbase$credits_req ==34, "33-36",
+  ifelse(appbase$credits_req == 36, "33-36",
+         
+  ifelse(appbase$credits_req == 38, "38-45",
+  ifelse(appbase$credits_req == 40, "38-45",
+  ifelse(appbase$credits_req == 41, "38-45",
+  ifelse(appbase$credits_req == 42, "38-45",
+  ifelse(appbase$credits_req == 43, "38-45",
+  ifelse(appbase$credits_req == 44, "38-45",
+  ifelse(appbase$credits_req == 45, "38-45",
+         
+  ifelse(appbase$credits_req == 47, "47-60",
+  ifelse(appbase$credits_req == 48, "47-60",                    
+  ifelse(appbase$credits_req == 52, "47-60",
+  ifelse(appbase$credits_req == 57, "47-60",
+  ifelse(appbase$credits_req == 60, "47-60",
+         
+  ifelse(appbase$credits_req == 62, "62-75",
+  ifelse(appbase$credits_req == 69, "62-75",
+  ifelse(appbase$credits_req == 74, "62-75",
+  ifelse(appbase$credits_req == 75, "62-75",             
+         
+  ifelse(appbase$credits_req == 86, "86-95",
+  ifelse(appbase$credits_req == 90, "86-95",
+  ifelse(appbase$credits_req == 95, "86-95",
+         appbase$credits_req)))))))))))))))))))))))
+table(appbase$credits_req_new)
+```
+
+
+# Merging Data
+```{r}
+Data <- dplyr::full_join(appbase, gre, by="identity", all=TRUE)
+Data <- dplyr::full_join(Data, login1, by="identity", all=TRUE)
+Data <- dplyr::full_join(Data, message_main, by="identity", all=TRUE)
+```
+
+
+
+
+
+
+
+
+
+
+# Final Data Visualizations
+1
+```{r}
+library(ggplot2)
+ggplot(data=school, aes(school$gpa_numeric)) + 
+  geom_histogram(breaks=seq(0, 4.4, by = 0.2), 
+                 col="red", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "green", high = "red") +
+  labs(title="Previous School GPA Records", x="GPA Score Reported", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+2
+```{r}
+library(ggplot2)
+ggplot(data=school,aes(x=earned_degree_num)) + 
+  geom_bar(fill="chartreuse3") + 
+  geom_text(stat='count',aes(label=..count..),vjust=-1, col="darkslateblue") + 
+  ylim(-200, 7000) + 
+  labs(title="Priviously: Degree Earned or Not (dropped)", x="Yes/No", y="Number of Cases reported in total")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+3,4,5,6,7
+```{r}
+library(ggplot2)
+ggplot(data=gre, aes(gre$gre_verbal_new)) + 
+  geom_histogram(breaks=seq(0, 170, by = 2), 
+                 col="chartreuse4", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "yellow", high = "chartreuse4")+
+  labs(title="Histogram for Verbal Scores recorded in the GRE", x="Verbal Score (Max = 170)", y="Number of recorded applicant cases")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+
+```{r}
+library(ggplot2)
+ggplot(data=gre, aes(gre$gre_quantitative_new)) + 
+  geom_histogram(breaks=seq(0, 170, by = 2), 
+                 col="blue", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "green", high = "blue")+
+  labs(title="Histogram for Quantitative Scores recorded in the GRE", x="Quantitative Score (Max = 170)", y="Number of recorded applicant cases")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+
+```{r}
+library(ggplot2)
+ggplot(data=gre, aes(gre$gre_writing)) + 
+  geom_histogram(breaks=seq(0, 6, by = 0.5), 
+                 col="purple4", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "orchid", high = "purple4")+
+  labs(title="Histogram for Writing Scores recorded in the GRE", x="Quantitative Score (Scale 0-6)", y="Number of recorded applicant cases")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+
+```{r}
+library(ggplot2)
+ggplot(data=gre, aes(gre$gre_total_new)) + 
+  geom_histogram(breaks=seq(140, 340, by = 5), 
+                 col="mediumblue", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "darkorange", high = "mediumblue")+
+  labs(title="Histogram for Verbal and Quants Scores recorded in the GRE", x="Quantitative (Max = 340)", y="Number of recorded applicant cases")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+
+```{r}
+library(psych)
+pairs.panels(gre1[c(1:4)], gap = 0)
+```
+8
+```{r}
+counts <- table(eventattendance$EventType)
+#barplot(counts, main="Event Audience Barplot", ylab="Number of Audience", xlab="Event Type")
+#try to look for a way to write the xlab labels vertically
+par(las=2)
+par(mar=c(5,15,4,2)) 
+#(space on xlab side, space on ylab side, spacing between different intervals on x lab and the ylab)
+barplot(counts, main="Event Attendance Barplot", horiz=TRUE, xlab="Number of Attendees", col="chartreuse3")
+```
+9
+```{r}
+counts <- table(appdecision$decision_name)
+par(las=2)
+par(mar=c(5,16,4,2)) 
+#(space on xlab side, space on ylab side, spacing between different intervals on x lab and the ylab)
+barplot(counts, main="Decision Name Barplot", horiz=TRUE, xlab="Number of Applicants in each decision type", col="chartreuse3")
+```
+10
+```{r}
+library(ggplot2)
+ggplot(data=appbase,aes(x=credits_req_new)) + 
+  geom_bar(fill="blueviolet") + 
+  geom_text(stat='count',aes(label=..count..),vjust=-1, col="darkslateblue") + 
+  ylim(-50, 1500) + 
+  labs(title="Degree Credits Required", x="Number of Credits", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+11
+```{r}
+library(ggplot2)
+ggplot(data=appbase,aes(x=app_number)) + 
+  geom_bar(fill=c("chocolate4","chocolate", "chocolate2", "chocolate1", "chocolate1")) + 
+  geom_text(stat='count',aes(label=..count..),vjust=-1, col="darkslateblue") + 
+  ylim(-50, 4500) + 
+  labs(title="Number of App_Number", x="Number of Apps", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+12
+```{r}
+library(ggplot2)
+ggplot(data=appbase,aes(x=sex_1)) + 
+  geom_bar(fill=115) + 
+  geom_text(stat='count',aes(label=..count..),vjust=-1, col="darkslateblue") + 
+  ylim(-50, 4200) + 
+  labs(title="Gender Dominance amongst Applicants", x="Gender", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+13
+```{r}
+library(ggplot2)
+ggplot(data=appbase,aes(x=PrevApply_1)) + 
+  geom_bar(fill="violetred") + 
+  geom_text(stat='count',aes(label=..count..),vjust=-1, col="darkslateblue") + 
+  ylim(-50, 5000) + 
+  labs(title="Previous_Applicant or not", x="Previous Applicant or Not", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+14
+```{r}
+library(ggplot2)
+ggplot(data=appbase,aes(x=EverDeposited)) + 
+  geom_bar(fill="olivedrab") + 
+  geom_text(stat='count',aes(label=..count..),vjust=-1, col="darkslateblue") + 
+  ylim(-50, 4300) + 
+  labs(title="Applicant_Deposited_Entry_Fee_or_Not", x="Applicant_Deposited_Entry_Fee_or_Not", y="Number_of_Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+15
+```{r}
+library(ggplot2)
+ggplot(data=appbase,aes(x=Scholarship_app_1)) + 
+  geom_bar(fill="hotpink4") + 
+  geom_text(stat='count',aes(label=..count..),vjust=-1, col="darkslateblue") + 
+  ylim(-50, 4700) + 
+  labs(title="Scholarship Applications", x="Applied_or_Not", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+16
+```{r}
+library(ggplot2)
+ggplot(data=appbase, aes(appbase$age_at_app_new)) + 
+  geom_histogram(breaks=seq(19, 65, by = 1), 
+                 col="orangered", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "yellow", high = "orangered")+
+  labs(title="Applicant's Age", x="Age", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+17
+```{r}
+library(ggplot2)
+ggplot(data=Data, aes(Data$sum_login_count)) + 
+  geom_histogram(breaks=seq(-5, 650, by = 5), 
+                 col="darkblue", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "cyan", high = "darkblue")+
+  labs(title="Number of Logins per Applicant", x="Number of Logins", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+18
+```{r}
+library(ggplot2)
+ggplot(data=Data, aes(Data$sum_num_of_message)) + 
+  geom_histogram(breaks=seq(-5, 450, by = 5), 
+                 col="turquoise4", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "turquoise", high = "turquoise4")+
+  labs(title="Number of Messages SENT", x="Number of Messages", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+19
+```{r}
+library(ggplot2)
+ggplot(data=Data, aes(Data$sum_open_or_url_message)) + 
+  geom_histogram(breaks=seq(-10, 450, by = 5), 
+                 col="darkblue", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "palegreen", high = "royalblue")+
+  labs(title="Number of messages OPEN/URL", x="NUmber of Messages", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+20
+```{r}
+appbase<-dplyr::select(appbase,identity,app_number,age_at_app,'Credits Req',Scholarship_app)
+regression<-lm(appbase$app_number~appbase$age_at_app+appbase$`Credits Req`+appbase$Scholarship_app)
+summary(regression)
+appbase<-dplyr::select(appbase,-identity)
+appbase<-na.omit(appbase) 
+appbase2<-appbase[c("app_number","age_at_app","Credits Req","Scholarship_app")]
+CORb <- cor(appbase2)
+corrplot(CORb, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.6, tl.srt=45,addCoef.col="black", addCoefasPercent = TRUE,sig.level=0.50, insig = "blank")
+```
+21
+```{r}
+appage<-dplyr::select(appbase,app_number,age_at_app)
+regression<-lm(appbase$age_at_app~appbase$app_number)
+summary(regression)
+appage<-na.omit(appage) 
+appage2<-appage[c("app_number","age_at_app")]
+CORa <- cor(appage2)
+corrplot(CORa, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.6, tl.srt=45,addCoef.col="black", addCoefasPercent = TRUE,sig.level=0.50, insig = "blank")
+```
+22.
+```{r}
+applar<-dplyr::select(appbase,app_number,Scholarship_app)
+regression<-lm(appbase$app_number~appbase$Scholarship_app)
+summary(regression)
+applar<-na.omit(applar) 
+applar2<-applar[c("app_number","Scholarship_app")]
+CORs <- cor(applar2)
+corrplot(CORs, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.6, tl.srt=45,addCoef.col="black", addCoefasPercent = TRUE,sig.level=0.50, insig = "blank")
+```
+23.
+```{r}
+appbase<-dplyr::select(appbase,identity,app_number,age_at_app,Scholarship_app)
+gpa<-dplyr::select(PersonSchools,identity,gpa)
+gre<-dplyr::select(PersonGRE,identity,Verbal,Quantitative,Writing)
+appgg<-dplyr::full_join(appbase,gpa,by="identity", all=TRUE)
+appgg<-dplyr::select(appgg,-identity)
+appgg<-na.omit(appgg) 
+regression<-lm(appgg$app_number~appgg$gpa)
+summary(regression)
+appgg2<-appgg[c("app_number","age_at_app","Scholarship_app","gpa")]
+gpa1<-dplyr::select(PersonSchools,gpa)
+
+is.NullOb <- function(x) is.null(x) | all(sapply(x, is.null))
+
+## Recursively step down into list, removing all such objects 
+rmNullObs <- function(x) {
+   x <- Filter(Negate(is.NullOb), x)
+   lapply(x, function(x) if (is.list(x)) rmNullObs(x) else x)
+}
+
+rmNullObs(gpa1)
+gpa2 <- list(gpa1)
+gpa3<-rmNullObs(gpa2)
+```
+```{r}
+non_null_names <- which(!sapply(gpa1, is.null))
+gpa2 <- gpa1[non_null_names]
+gpa3<-names(gpa2) <- non_null_names
+appgg2<-appgg[c("app_number","age_at_app","Scholarship_app","gpa3")]
+
+CORgg <- cor(appgg2)
+corrplot(CORgg, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.6, tl.srt=45,addCoef.col="black", addCoefasPercent = TRUE,sig.level=0.50, insig = "blank")
+appgg<-dplyr::full_join(appbase,gre,by="identity", all=TRUE)
+appgg<-na.omit(appgg)
+appgg2<-appgg[c("app_number","Verbal","Quantitative")]
+regression<-lm(appgg2$app_number~appgg2$Verbal+appgg2$Quantitative)
+summary(regression)
+cor(appgg2)
+corrplot(CORgg, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.6, tl.srt=45,addCoef.col="black", addCoefasPercent = TRUE,sig.level=0.50, insig = "blank")
+greh<-subset(gre,"Verbel">= 150)
+```
+24.
+```{r}
+install.packages("rJava")
+library(rJava)
+installed.packages("iplots")
+library(iplots)
+install.packages(c("devtools","jsonlite", "knitr", "shiny", "httpuv"))
+library(devtools)
+install_github("mages/googleVis")
+library(googleVis)
+
+install.packages("googleVis")
+library(googleVis)
+
+country<-table(appbase$permanent_country)
+install.packages('googleVis')
+df<-as.data.frame(country)
+View(df)
+library(ggplot2)
+library(maps)
+WorldData <- map_data('world')
+head(WorldData, 100)
+df <-data.frame(region=c('Hungary','Lithuania','Argentina'),value=c(4,10???11))
+
+Total <- WorldData[WorldData$region %in% df$region, ]
+Total$value <- df$value[match(Total$region, df$region)]
+
+ggplot(Total, aes(x=long, y=lat, group = group, fill = value)) + 
+  geom_polygon(colour = "white") +
+  scale_fill_continuous(low = "thistle2", 
+                        high = "darkred", 
+                        guide="colorbar") +
+  theme_bw()  + 
+  labs(fill = "legend" ,title = "Title", x="", y="") +
+  scale_y_continuous(breaks=c()) + 
+  scale_x_continuous(breaks=c()) + 
+  theme(panel.border =  element_blank())
+```{r}
+library(plotGoogleMaps)
+ 
+polygons.plot <- df[,c("Freq","Var1")]
+polygons.plot <- polygons.plot[polygons.plot$NAME!="Antarctica",]
+names(polygons.plot) <- c("Freq","Var1")
+
+plot(polygons.plot)
+
+
+
+```
