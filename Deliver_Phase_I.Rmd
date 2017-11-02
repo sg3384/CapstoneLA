@@ -576,3 +576,123 @@ ggplot(data=Data, aes(Data$sum_open_or_url_message)) +
   labs(title="Number of messages OPEN/URL", x="NUmber of Messages", y="Number of Applicants")+ 
   theme(plot.title = element_text(face = "bold", size=15))
 ```
+20
+```{r}
+appbase<-dplyr::select(appbase,identity,app_number,age_at_app,'Credits Req',Scholarship_app)
+regression<-lm(appbase$app_number~appbase$age_at_app+appbase$`Credits Req`+appbase$Scholarship_app)
+summary(regression)
+appbase<-dplyr::select(appbase,-identity)
+appbase<-na.omit(appbase) 
+appbase2<-appbase[c("app_number","age_at_app","Credits Req","Scholarship_app")]
+CORb <- cor(appbase2)
+corrplot(CORb, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.6, tl.srt=45,addCoef.col="black", addCoefasPercent = TRUE,sig.level=0.50, insig = "blank")
+```
+21
+```{r}
+appage<-dplyr::select(appbase,app_number,age_at_app)
+regression<-lm(appbase$age_at_app~appbase$app_number)
+summary(regression)
+appage<-na.omit(appage) 
+appage2<-appage[c("app_number","age_at_app")]
+CORa <- cor(appage2)
+corrplot(CORa, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.6, tl.srt=45,addCoef.col="black", addCoefasPercent = TRUE,sig.level=0.50, insig = "blank")
+```
+22.
+```{r}
+applar<-dplyr::select(appbase,app_number,Scholarship_app)
+regression<-lm(appbase$app_number~appbase$Scholarship_app)
+summary(regression)
+applar<-na.omit(applar) 
+applar2<-applar[c("app_number","Scholarship_app")]
+CORs <- cor(applar2)
+corrplot(CORs, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.6, tl.srt=45,addCoef.col="black", addCoefasPercent = TRUE,sig.level=0.50, insig = "blank")
+```
+23.
+```{r}
+appbase<-dplyr::select(appbase,identity,app_number,age_at_app,Scholarship_app)
+gpa<-dplyr::select(PersonSchools,identity,gpa)
+gre<-dplyr::select(PersonGRE,identity,Verbal,Quantitative,Writing)
+appgg<-dplyr::full_join(appbase,gpa,by="identity", all=TRUE)
+appgg<-dplyr::select(appgg,-identity)
+appgg<-na.omit(appgg) 
+regression<-lm(appgg$app_number~appgg$gpa)
+summary(regression)
+appgg2<-appgg[c("app_number","age_at_app","Scholarship_app","gpa")]
+gpa1<-dplyr::select(PersonSchools,gpa)
+
+is.NullOb <- function(x) is.null(x) | all(sapply(x, is.null))
+
+## Recursively step down into list, removing all such objects 
+rmNullObs <- function(x) {
+   x <- Filter(Negate(is.NullOb), x)
+   lapply(x, function(x) if (is.list(x)) rmNullObs(x) else x)
+}
+
+rmNullObs(gpa1)
+gpa2 <- list(gpa1)
+gpa3<-rmNullObs(gpa2)
+```
+```{r}
+non_null_names <- which(!sapply(gpa1, is.null))
+gpa2 <- gpa1[non_null_names]
+gpa3<-names(gpa2) <- non_null_names
+appgg2<-appgg[c("app_number","age_at_app","Scholarship_app","gpa3")]
+
+CORgg <- cor(appgg2)
+corrplot(CORgg, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.6, tl.srt=45,addCoef.col="black", addCoefasPercent = TRUE,sig.level=0.50, insig = "blank")
+appgg<-dplyr::full_join(appbase,gre,by="identity", all=TRUE)
+appgg<-na.omit(appgg)
+appgg2<-appgg[c("app_number","Verbal","Quantitative")]
+regression<-lm(appgg2$app_number~appgg2$Verbal+appgg2$Quantitative)
+summary(regression)
+cor(appgg2)
+corrplot(CORgg, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.6, tl.srt=45,addCoef.col="black", addCoefasPercent = TRUE,sig.level=0.50, insig = "blank")
+greh<-subset(gre,"Verbel">= 150)
+```
+24.
+```{r}
+install.packages("rJava")
+library(rJava)
+installed.packages("iplots")
+library(iplots)
+install.packages(c("devtools","jsonlite", "knitr", "shiny", "httpuv"))
+library(devtools)
+install_github("mages/googleVis")
+library(googleVis)
+
+install.packages("googleVis")
+library(googleVis)
+
+country<-table(appbase$permanent_country)
+install.packages('googleVis')
+df<-as.data.frame(country)
+View(df)
+library(ggplot2)
+library(maps)
+WorldData <- map_data('world')
+head(WorldData, 100)
+df <-data.frame(region=c('Hungary','Lithuania','Argentina'),value=c(4,10???11))
+
+Total <- WorldData[WorldData$region %in% df$region, ]
+Total$value <- df$value[match(Total$region, df$region)]
+
+ggplot(Total, aes(x=long, y=lat, group = group, fill = value)) + 
+  geom_polygon(colour = "white") +
+  scale_fill_continuous(low = "thistle2", 
+                        high = "darkred", 
+                        guide="colorbar") +
+  theme_bw()  + 
+  labs(fill = "legend" ,title = "Title", x="", y="") +
+  scale_y_continuous(breaks=c()) + 
+  scale_x_continuous(breaks=c()) + 
+  theme(panel.border =  element_blank())
+library(plotGoogleMaps)
+polygons.plot <- df[,c("Freq","Var1")]
+polygons.plot <- polygons.plot[polygons.plot$NAME!="Antarctica",]
+names(polygons.plot) <- c("Freq","Var1")
+
+plot(polygons.plot)
+
+
+
+```
