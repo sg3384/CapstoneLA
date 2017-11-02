@@ -1,0 +1,37 @@
+
+```title: "Capstone LA"
+author: "fengxian liu"
+date: "2017/10/17"
+output: html_document
+---
+
+```{r}
+install.packages("readxl")
+library(readxl)
+gre <- read_excel("PersonGRE.xlsx")
+```
+
+```{r}
+summary(ApplicationBase)
+```
+
+```{r}
+hist(ApplicationBase$app_number)
+```
+
+```{r}
+table(ApplicationBase$citizenship1)
+```
+
+
+
+```{r}
+regression<-lm(ApplicationBase$app_number~ApplicationBase$age_at_app)
+summary(regression)
+
+``` 
+Pxiao'yu??????0.05 significant
+
+```{r}
+cor(ApplicationBase$app_number,ApplicationBase$age_at_app)
+````
