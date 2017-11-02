@@ -543,3 +543,36 @@ ggplot(data=appbase, aes(appbase$age_at_app_new)) +
   labs(title="Applicant's Age", x="Age", y="Number of Applicants")+ 
   theme(plot.title = element_text(face = "bold", size=15))
 ```
+17
+```{r}
+library(ggplot2)
+ggplot(data=Data, aes(Data$sum_login_count)) + 
+  geom_histogram(breaks=seq(-5, 650, by = 5), 
+                 col="darkblue", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "cyan", high = "darkblue")+
+  labs(title="Number of Logins per Applicant", x="Number of Logins", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+18
+```{r}
+library(ggplot2)
+ggplot(data=Data, aes(Data$sum_num_of_message)) + 
+  geom_histogram(breaks=seq(-5, 450, by = 5), 
+                 col="turquoise4", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "turquoise", high = "turquoise4")+
+  labs(title="Number of Messages SENT", x="Number of Messages", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+19
+```{r}
+library(ggplot2)
+ggplot(data=Data, aes(Data$sum_open_or_url_message)) + 
+  geom_histogram(breaks=seq(-10, 450, by = 5), 
+                 col="darkblue", 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "palegreen", high = "royalblue")+
+  labs(title="Number of messages OPEN/URL", x="NUmber of Messages", y="Number of Applicants")+ 
+  theme(plot.title = element_text(face = "bold", size=15))
+```
