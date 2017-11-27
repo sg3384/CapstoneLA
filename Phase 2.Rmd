@@ -17,11 +17,21 @@ install.packages("dplyr")
 install.packages("tidyr")
 ```
 
-# Francis - Hierarchical clustering analysis
+# Francis
+Hierarchical clustering analysis
 
 
 
-# Shreya - Login and Message Clustering on time to differentiate between deposited and not deposited
 
 
+
+
+# Shreya 
+Login and Message Clustering on time to differentiate between deposited and not deposited
+All Data
+1. Login deposited vs not deposited
+2. Messages vs Login - deposited
+3. Messages vs Login - not deposited
+
+Year wise analysis based on term start to see if there are differences
 
