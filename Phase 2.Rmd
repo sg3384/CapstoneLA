@@ -1,0 +1,27 @@
+---
+title: "Phase II"
+author: "Shreya and Francis"
+date: "November 11, 2017"
+output: html_document
+---
+
+Content of the RMarkdown
+
+
+
+```{r}
+install.packages("readxl")
+install.packages("psych")
+install.packages("ggplot2")
+install.packages("dplyr")
+install.packages("tidyr")
+```
+
+# Francis - Hierarchical clustering analysis
+
+
+
+# Shreya - Login and Message Clustering on time to differentiate between deposited and not deposited
+
+
+
