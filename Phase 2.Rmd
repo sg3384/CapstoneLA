@@ -20,8 +20,13 @@ install.packages("tidyr")
 ```
 
 # Francis
-Hierarchical clustering analysis
+K means clustering analysis
 
+-> Read data
+
+-> cleaning
+
+-> plots
 
 
 
