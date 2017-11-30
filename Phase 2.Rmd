@@ -23,7 +23,7 @@ install.packages("tidyr")
 K means clustering analysis
 
 -> Read data
-
+11
 -> cleaning
 
 -> plots
