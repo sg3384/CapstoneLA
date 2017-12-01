@@ -20,14 +20,122 @@ install.packages("tidyr")
 ```
 
 # Francis
-K means clustering analysis
+```{r}
+install.packages("dplyr")
+install.packages("tidyr")
+library("dplyr")
+library("tidyr")
+library("rpart")
+```
+```{r}
+set.seed(1)
+sub<-sample(1:nrow(A5),round(nrow(A5)*2/3))
+length(sub) 
+data_train<-A5[sub,]
+data_test<-A5[-sub,]
+dim(data_train)
+dim(data_test)
+table(data_train$data1) 
+table(data_test$data2)
+tree.both<-rpart(as.factor(data_test$EverDeposited)~data_train$earned_degree .,data=data_train,method='class',minsplit=20,minbucket=150,cp=0.00017)
+summary(tree.both)
+tree.both$variable.importance
+printcp(tree.both)
+plotcp(tree.both,lwd=2) 
+```
+#plot tree
+```{r}
+fit <- rpart(e ~ a + b+ c, method="class", data=DATA)
+printcp(fit) # display the results 
+plotcp(fit) # visualize cross-validation results 
+summary(fit) # detailed summary of splits
+plot(fit, uniform=TRUE, main="Tree")
+text(fit, use.n=TRUE, all=TRUE, cex=.8)
+post(fit)
 
+#cluster analysis(ggplot,ggplot2)
+```{r}
+y1=lm(data1~data2,data=A)
+plot(A$data1,B$data2)
+abline(y1)
+```
+```{r}
+ggplot(data, aes(x=a, y=b, colour=c)) + geom_point()#color
+ggplot(data, aes(x=a, y=b, shape=c)) + geom_point()#shape
+```
+```{r}
+ggplot(data, aes(x=a, y=b))+ stat_bin2d()
+ggplot(data, aes(x=a, y=b))+ geom_point(alpha=.1)
+ggplot(data, aes(x=a, y=b)+ geom_point(alpha=.01)
+ggplot(data, aes(x=a, y=b)+ stat_bin2d()
+```
+#K means clustering analysis
 -> Read data
-
--> cleaning
-
+```{r}
+a1<-dplyr::select()
+a2<-read_excel("xlsx")
+a3<-dplyr::full_join(a1,a3,by="m", all=TRUE)
+```
+-> clean
+```{r}
+a3<-na.omit(a3)
+a3$ear<-ifelse(a5$ear=="Y",1,0)
+View(a5)
+a3$Ever<-ifelse(a5$ear=="Y",1,0)
+```
 -> plots
-
+```{r}
+kmeans.cluster <- kmeans(data, centers=3) 
+kmeans.cluster$withinss
+table(kmeans.cluster$cluster, A$data)  
+require(factoextra)
+fviz_cluster(kmeans.cluster,          
+             data = data,              
+             geom = c("point","text"),
+             frame.type = "norm") 
+```
+```{r}
+fviz_nbclust(data, 
+             FUNcluster = kmeans,
+             method = "wss",     
+             k.max = 12          # max number of clusters to consider
+             ) +
+labs(title="Elbow Method for K-Means") +
+geom_vline(xintercept = 3,       
+           linetype = 2)                  
+```
+#K-Medoid clustering analysis
+```{r}
+require(cluster)
+kmedoid.cluster <- pam(data, k=3) require(factoextra)
+kmedoid.cluster$objective   
+table(kmedoid.cluster$clustering, A$data) 
+require(factoextra)
+fviz_cluster(kmedoid.cluster,      
+             data = data,           
+             geom = c("point"),    
+             frame.type = "norm")                                
+```
+```{r}
+ fviz_nbclust(data, 
+             FUNcluster = pam,  
+             method = "wss",    
+             k.max = 12         
+             ) +    
+labs(title="Elbow Method for K-Medoid") +
+geom_vline(xintercept = 3,      
+           linetype = 2)   
+```
+```{r}
+require(factoextra)
+fviz_nbclust(data, 
+             FUNcluster = kmeans,   # K-Means
+             method = "silhouette", # Avg. Silhouette
+             k.max = 12             # max number of clusters
+             ) +
+    
+labs(title="Avg.Silhouette Method for K-Means")           
+```
 
 
 
