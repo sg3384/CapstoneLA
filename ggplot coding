@@ -1,0 +1,80 @@
+
+library(ggplot2)  
+length(diamonds) ##diamonds is the database
+
+## 1.quick plot=qplot
+set.seed(1410) 
+dsmall<-diamonds[sample(nrow(diamonds),100),]
+qplot(carat,price,data=diamonds)
+
+#color、size、shape
+qplot(carat,price,data=dsmall,shape=cut)  
+qplot(carat,price,data=dsmall,shape=cut)  
+
+##2.Geom
+The values can be: point, smooth, boxplot, path, line
+For continuous variables: geom advisable histogram, freqpoly, density
+For discrete variables: Bar
+
+qplot(carat,price,data=dsmall,geom=c("point","smooth"))  
+qplot(carat,price,data=dsmall,geom=c("point","smooth"))  
+qplot(carat,price,data=dsmall,geom=c("point","smooth"))  
+
+##3.geom_point:
+mpg  
+head(mpg)  
+p<-ggplot(data=mpg,mapping=aes(x=cty,y=hwy))  
+p+geom_point()  
+summary(p)  
+summary(p+geom_point()) 
+
+##histogram
+p<-ggplot(mpg,aes(x=hwy))  
+p+geom_histogram()  
+
+p+geom_histogram(aes(fill=factor(year),y=..density..),alpha=0.3,colour="black")+  
+  stat_density(geom="line",position="identity",size=1.5,aes(colour=factor(year)))+  
+  facet_wrap(~year,ncol=1)  
+  
+##Bar chart
+p<-ggplot(mpg,aes(x=class))  
+p+geom_bar() 
+
+class2<-mpg$class  
+class2<-reorder(class2,class2,length)  
+mpg$class2<-class2  
+p<-ggplot(mpg,aes(x=class2))  
+p+geom_bar(aes(fill=class2))  
+
+p<-ggplot(mpg,aes(class2,fill=factor(year)))  
+p+geom_bar(position="identity",alpha=0.5)  
+
+p+geom_bar(position="dodge")  ##Parallel histogram
+p+geom_bar(position="stack")  ##stack histogram
+p+geom_bar(position="fill")   ##Contrast histogram
+p+geom_bar(aes(fill=class2))+facet_wrap(~year)    ##Contrast histogram in different page
+
+##Pie chart
+p<-ggplot(mpg,aes(x=factor(1),fill=factor(class)))+geom_bar(width=1)  
+p+coord_polar(theta="y")  
+
+##Box	plots
+p<-ggplot(mpg,aes(class,hwy,fill=class))  
+p+geom_boxplot()  
+
+##Density plot
+p<-ggplot(diamonds,aes(carat,price))  
+p+stat_bin2d(bins=60)  
+
+p+stat_density2d(aes(fill=..level..),geom="polygon")+  
+  coord_cartesian(xlim=c(0,1.5),ylim=c(0,6000))+  
+  scale_fill_continuous(high="red2",low="blue4")  
+
+
+##Wind rose plot
+dir<-cut_interval(runif(100,0,360),n=16)  
+mag<-cut_interval(rgamma(100,15),4)  
+sample<-data.frame(dir=dir,mag=mag)  
+p<-ggplot(sample,aes(x=dir,y=..count..,fill=mag))  
+p+geom_bar()+coord_polar()  
+
