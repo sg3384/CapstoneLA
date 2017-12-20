@@ -1,0 +1,89 @@
+##Read & Merge Data
+
+```{r}
+A1<-dplyr::select(ApplicationBase,identity,age_at_app,EverDeposited,`Credits Req`,Scholarship_app,permanent_country)
+A2<-dplyr::select(PersonGRE,identity,Total)
+A3<-dplyr::select(ApplicationDecisions,identity,app_number,decision_name)
+A6<-dplyr::select(PersonSchools,identity,gpa,earned_degree)
+
+A4<-dplyr::full_join(A1,A2,by="identity", all=TRUE)
+A5<-dplyr::full_join(A3,A4,by="identity", all=TRUE)
+A7<-dplyr::full_join(A5,A6,by="identity", all=TRUE)
+```
+
+##clean data
+```{r}
+A7<-na.omit(A7)
+A7$EverDeposited<-ifelse(A7$EverDeposited=="Y",1,0)
+A7$earned_degree<-ifelse(A7$earned_degree=="Y",1,0)
+A7$permanent_country<-ifelse(A7$permanent_country=="United States",1,0)
+```
+
+##correlation plot
+```{r} ##plot1
+library(corrplot)
+CD<-dplyr::select(A7,EverDeposited,age_at_app,app_number,earned_degree,Scholarship_app,permanent_country,`Credits Req`)
+CD<-CD[c("EverDeposited","Credits Req","age_at_app","app_number","Scholarship_app","permanent_country","earned_degree")]
+CORd <- cor(CD)
+corrplot(CORd, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.95, tl.srt=80,addCoef.col="black", addCoefasPercent = TRUE,sig.level=0.50, insig = "blank")
+```
+
+```{r}##plot2
+CD<-dplyr::select(A7,EverDeposited,earned_degree,Total,Scholarship_app,permanent_country)
+CD<-CD[c("EverDeposited","Total","Scholarship_app","permanent_country","earned_degree")]
+CORd <- cor(CD)
+corrplot(CORd, order="AOE", method="circle", tl.pos="lt", type="upper", tl.col="black", tl.cex=0.9, tl.srt=90,addCoef.col="black", addCoefasPercent = TRUE,sig.level=0.50, insig = "blank")
+```
+
+##Decision tree
+
+#Classification Tree
+library(rpart)
+c.tree <- rpart(EverDeposited ~ Total + Scholarship_app + earned_degree ,method = "class", data = A7)
+printcp(c.tree)
+
+#plot the tree
+post(c.tree, file = "classification tree.ps", title = "Decision Tree")
+
+
+##ggplot2
+(scatter plot, hist plot, polar plot, pie plot，density plot，two dimension heat plot)
+
+```{r}
+p <- ggplot(data= A7, mapping=aes(x=`Credits Req`, y=decision_name, colour=app_number))
+p+geom_point()
+
+p <- ggplot(data= A7, mapping=aes(x=age_at_app, y=decision_name, colour=EverDeposited))
+p+geom_point()
+
+p <- ggplot(data= A7, mapping=aes(x=decision_name, y=Total, colour=EverDeposited))
+p+geom_point()+coord_flip()
+```
+
+```{r}
+ggplot(A7)+geom_histogram(aes(x=age_at_app, fill=，EverDeposited))
+ggplot(A7)+geom_density(aes(x=`Credits Req`, colour=app_number))
+ggplot(A7)+geom_density(aes(x=age_at_app, colour=app_number))
+ggplot(A7)+geom_bar(aes(x=Total, fill=EverDeposited))+coord_flip()
+```
+
+```{r}
+ggplot(A7)+geom_bar(aes(x=EverDeposited, fill=decision_name))+coord_polar(theta="y")
+ggplot(A7)+geom_bar(aes(x=age_at_app, fill=decision_name))+coord_polar(theta="y")
+ggplot(A7)+geom_bar(aes(x=`Credits Req`, fill=decision_name))+coord_polar(theta="y")
+ggplot(A7)+geom_bar(aes(x=Scholarship_app, fill=decision_name))+coord_polar(theta="y")
+ggplot(A7)+geom_bar(aes(x=permanent_country, fill=decision_name))+coord_polar(theta="y")
+ggplot(A7)+geom_bar(aes(x=earned_degree, fill=decision_name))+coord_polar(theta="y")
+
+ggplot(A7)+geom_bar(aes(x=EverDeposited, fill=decision_name))+coord_polar()
+ggplot(A7)+geom_bar(aes(x=earned_degree, fill=decision_name))+coord_polar()
+ggplot(A7)+geom_bar(aes(x=permanent_country, fill=decision_name))+coord_polar()
+ggplot(A7)+geom_bar(aes(x=Scholarship_app, fill=decision_name))+coord_polar()
+```
+```{r}
+library(ggplot2)
+ggplot(A7, aes(`Credits Req`,Total))+ stat_density2d(aes(fill = ..level..), geom="polygon")+ scale_fill_continuous(high='darkred',low='darkgreen')
+ggplot(A7, aes(`Credits Req`,age_at_app))+ stat_density2d(aes(fill = ..level..), geom="polygon")+ scale_fill_continuous(high='darkred',low='blue')
+ggplot(A7, aes(`Credits Req`,Total))+ stat_density2d(aes(fill = ..level..), geom="polygon")+ scale_fill_continuous(high='darkred',low='purple')
+ggplot(A7, aes(Total,`Credits Req`))+ stat_density2d(aes(fill = ..level..), geom="polygon")+ scale_fill_continuous(high='darkred',low='purple')
+```
