@@ -182,7 +182,7 @@ library(readxl)
 message <- read_excel("C:/Users/Shreya/Documents/GITHUB/Capstone/PersonMessages.xlsx")
 ```
 
-# Message Data
+Message Data
 ```{r}
 table(message$opened_or_url)
 #table(message$identity, message$opened_or_url)
