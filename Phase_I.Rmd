@@ -692,7 +692,4 @@ polygons.plot <- polygons.plot[polygons.plot$NAME!="Antarctica",]
 names(polygons.plot) <- c("Freq","Var1")
 
 plot(polygons.plot)
-
-
-
 ```
