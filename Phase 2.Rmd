@@ -150,3 +150,313 @@ All Data
 
 Year wise analysis based on term start to see if there are differences
 
+Content of the RMarkdown
+1. Read data
+2. Message data
+3. Login data
+4. App base data
+5. Final Data Visualizations
+
+
+```{r}
+install.packages("readxl")
+install.packages("psych")
+install.packages("ggplot2")
+install.packages("dplyr")
+install.packages("tidyr")
+```
+
+# Read Data
+```{r}
+library(readxl)
+appbase <- read_excel("C:/Users/Shreya/Documents/GITHUB/Capstone/ApplicationBase.xlsx")
+```
+
+```{r}
+library(readxl)
+login <- read_excel("C:/Users/Shreya/Documents/GITHUB/Capstone/PersonLogins.xlsx")
+```
+
+```{r}
+library(readxl)
+message <- read_excel("C:/Users/Shreya/Documents/GITHUB/Capstone/PersonMessages.xlsx")
+```
+
+# Message Data
+```{r}
+table(message$opened_or_url)
+#table(message$identity, message$opened_or_url)
+```
+
+```{r}
+message$opened_or_url_1 <- ifelse(message$opened_or_url == "NULL", "0", 1)
+message$opened_or_url_1 <-as.numeric(message$opened_or_url_1)
+```
+
+```{r}
+library(dplyr)
+library(tidyr)
+message$count <- 1
+message2 <- message %>% group_by(identity) %>% summarize(sum(opened_or_url_1))
+message3 <- message %>% group_by(identity) %>% summarize(sum(count))
+```
+
+```{r}
+message2 <- setNames(message2, c("identity", "sum_open_or_url_message"))
+message3 <- setNames(message3, c("identity", "sum_num_of_message"))
+```
+
+```{r}
+library(dplyr)
+message_main <- dplyr::full_join(message3, message2, by="identity")
+```
+
+# Login Data
+```{r}
+library(dplyr)
+library(tidyr)
+login$count <- 1
+login1 <- login %>% group_by(identity) %>% summarize(sum(count))
+login1 <- setNames(login1, c("identity", "sum_login_count"))
+```
+
+# Application Base Data
+```{r}
+appbase$sex_1 <- ifelse(appbase$sex == "NULL", "Not_Stated", appbase$sex)
+appbase$PrevApply_1 <- ifelse(appbase$PrevApply == "0", "No", "Yes")
+appbase$Scholarship_app_1 <- ifelse(appbase$Scholarship_app == "0", "No", "Yes")
+```
+
+```{r}
+range(appbase$age_at_app)
+```
+
+```{r}
+appbase$age_at_app_new <- ifelse(appbase$age_at_app <=16, NA, appbase$age_at_app)
+appbase$age_at_app_new <- as.numeric(appbase$age_at_app_new)
+```
+
+```{r}
+appbase$credits_req <- appbase$`Credits Req`
+appbase$credits_req_new <- 
+  ifelse(appbase$credits_req ==32, "32",
+         
+  ifelse(appbase$credits_req ==33, "33-36",
+  ifelse(appbase$credits_req ==34, "33-36",
+  ifelse(appbase$credits_req == 36, "33-36",
+         
+  ifelse(appbase$credits_req == 38, "38-45",
+  ifelse(appbase$credits_req == 40, "38-45",
+  ifelse(appbase$credits_req == 41, "38-45",
+  ifelse(appbase$credits_req == 42, "38-45",
+  ifelse(appbase$credits_req == 43, "38-45",
+  ifelse(appbase$credits_req == 44, "38-45",
+  ifelse(appbase$credits_req == 45, "38-45",
+         
+  ifelse(appbase$credits_req == 47, "47-60",
+  ifelse(appbase$credits_req == 48, "47-60",                    
+  ifelse(appbase$credits_req == 52, "47-60",
+  ifelse(appbase$credits_req == 57, "47-60",
+  ifelse(appbase$credits_req == 60, "47-60",
+         
+  ifelse(appbase$credits_req == 62, "62-75",
+  ifelse(appbase$credits_req == 69, "62-75",
+  ifelse(appbase$credits_req == 74, "62-75",
+  ifelse(appbase$credits_req == 75, "62-75",             
+         
+  ifelse(appbase$credits_req == 86, "86-95",
+  ifelse(appbase$credits_req == 90, "86-95",
+  ifelse(appbase$credits_req == 95, "86-95",
+         appbase$credits_req)))))))))))))))))))))))
+table(appbase$credits_req_new)
+```
+
+# Merging Data
+```{r}
+Data <- dplyr::full_join(appbase, login1, by="identity", all=TRUE)
+Data <- dplyr::full_join(Data, message_main, by="identity", all=TRUE)
+```
+
+# Login Data more manipulation 
+spliting date and time
+```{r}
+login2 <- login
+login2$datelogin <- as.Date(login2$issued)
+login2$timelogin <- format(login2$issued,"%H:%M:%S")
+Data1 <- dplyr::full_join(login2, Data, by="identity", all=TRUE)
+```
+
+Difference in login date and term start date
+```{r}
+Data1$diff_in_days<- difftime(Data1$datelogin, Data1$`Term Start`, units = c("days"))
+Data1$diff_in_days <- as.numeric(Data1$diff_in_days)
+hist(Data1$diff_in_days)
+```
+
+
+
+
+
+
+
+
+# Final Data Visualizations - Clustering of Logins and Messages over Time
+#1
+```{r}
+library(ggplot2)
+ggplot(data=Data1, aes(diff_in_days)) + 
+  geom_histogram(breaks=seq(-1200,900, by = 10), 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "darkorange", high = "mediumblue")+
+  labs(title="Difference in days from term start date - All Applicants", x="Difference in days from term start date", y="Number of logins on that day")+
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+#2
+```{r}
+library(ggplot2)
+ggplot(data=Data1, aes(diff_in_days)) + 
+  geom_histogram(breaks=seq(-365, 10, by = 10), 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "darkorange", high = "mediumblue")+
+  labs(title="Difference in days from term start date - All Applicants", x="Difference in days from term start date", y="Number of logins on that day")+
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+#3
+```{r}
+Everdeposit_Yes <- Data1[Data1$EverDeposited == "Y",]
+Everdeposit_Yes$diff_in_days<- difftime(Everdeposit_Yes$datelogin, Everdeposit_Yes$`Term Start`, units = c("days"))
+library(ggplot2)
+ggplot(data=Everdeposit_Yes, aes(diff_in_days)) + 
+  geom_histogram(breaks=seq(-365, 10, by = 10), 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "yellow", high = "forestgreen")+
+  labs(title="Difference in days from term start date - Applicants who Deposit", x="Difference in days from term start date", y="Number of logins on that day")+
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+#4
+```{r}
+Everdeposit_No <- Data1[Data1$EverDeposited == "N",]
+Everdeposit_No$diff_in_days<- difftime(Everdeposit_No$datelogin, Everdeposit_No$`Term Start`, units = c("days"))
+library(ggplot2)
+ggplot(data=Everdeposit_No, aes(diff_in_days)) + 
+  geom_histogram(breaks=seq(-365, 10, by = 10), 
+                 aes(fill=..count..)) +
+  scale_fill_gradient("Count", low = "yellow2", high = "red")+
+  labs(title="Difference in days from term start date - Applicant who did not Deposit", x="Difference in days from term start date", y="Number of logins on that day")+
+  theme(plot.title = element_text(face = "bold", size=15))
+```
+Data Manipulation
+```{r}
+Data5 <- Data1
+Data5$diff_in_days<- difftime(Data5$datelogin, Data5$`Term Start`, units = c("days"))
+Data5$count <- 1
+library(dplyr)
+library(tidyr)
+Data5 <- Data5 %>% group_by(diff_in_days) %>% summarize(sum(count))
+Data5 <- setNames(Data5, c("diff_in_days", "Sum_logins_all"))
+
+#summary(Everdeposit_No)
+Everdeposit_No$diff_in_days<- difftime(Everdeposit_No$datelogin, Everdeposit_No$`Term Start`, units = c("days"))
+Everdeposit_No$count <- 1
+library(dplyr)
+library(tidyr)
+Everdeposit_No_2 <- Everdeposit_No %>% group_by(diff_in_days) %>% summarize(sum(count))
+Everdeposit_No_2 <- setNames(Everdeposit_No_2, c("diff_in_days", "Sum_logins_not_deposit"))
+
+#summary(Everdeposit_Yes)
+Everdeposit_Yes$diff_in_days<- difftime(Everdeposit_Yes$datelogin, Everdeposit_Yes$`Term Start`, units = c("days"))
+Everdeposit_Yes$count <- 1
+library(dplyr)
+library(tidyr)
+Everdeposit_Yes_2 <- Everdeposit_Yes %>% group_by(diff_in_days) %>% summarize(sum(count))
+Everdeposit_Yes_2 <- setNames(Everdeposit_Yes_2, c("diff_in_days", "Sum_logins_did_deposit"))
+
+Data_login <- dplyr::full_join(Data5, Everdeposit_No_2, by="diff_in_days", all=TRUE)
+Data_login <- dplyr::full_join(Data_login, Everdeposit_Yes_2, by="diff_in_days", all=TRUE)
+```
+#5
+```{r}
+ggplot(Data_login, aes(x = diff_in_days)) + 
+  geom_line(aes(y = Sum_logins_all, colour = "All")) + 
+  geom_line(aes(y = Sum_logins_not_deposit, colour = "Not Deposit"))+
+  geom_line(aes(y = Sum_logins_did_deposit, colour = "Did Deposit"))+
+labs(x = 'Difference in days from term start date'
+       , y = 'Number of logins on that day'
+       , title = "Clustering Logins over Time") +
+  theme(plot.title = element_text(size = 20)
+        ,axis.title = element_text(size = 15, color = '#555555')
+        ,axis.title.y = element_text(size = 15, color = '#555555')
+        )  + scale_color_manual(values=c("royalblue1", "mediumseagreen", "lightcoral"))
+```
+#6
+```{r}
+ggplot(Data_login, aes(x = diff_in_days)) + 
+  geom_line(aes(y = Sum_logins_all, colour = "All")) + 
+  geom_line(aes(y = Sum_logins_not_deposit, colour = "Not Deposit"))+
+  geom_line(aes(y = Sum_logins_did_deposit, colour = "Did Deposit"))+
+labs(x = 'Difference in days from term start date'
+       , y = 'Number of logins on that day'
+       , title = "Clustering Logins over Time") +
+  theme(plot.title = element_text(size = 20)
+        ,axis.title = element_text(size = 15, color = '#555555')
+        ,axis.title.y = element_text(size = 15, color = '#555555')
+        ) + coord_cartesian(ylim = c(-20,1500), xlim = c(-400, 10))  + scale_color_manual(values=c("royalblue1", "mediumseagreen", "lightcoral"))
+```
+Data Manipulation for further graphs
+```{r}
+Data_login$Sum_logins_not_deposit_1 <- scale(Data_login$Sum_logins_not_deposit)
+Data_login$Sum_logins_all_1 <- scale(Data_login$Sum_logins_all)
+Data_login$Sum_logins_did_deposit_1 <- scale(Data_login$Sum_logins_did_deposit)
+```
+#8
+```{r}
+ggplot(Data_login, aes(x = diff_in_days)) + 
+  geom_line(aes(y = Sum_logins_all_1, colour = "All")) + 
+  geom_line(aes(y = Sum_logins_not_deposit_1, colour = "Not Deposit"))+
+  geom_line(aes(y = Sum_logins_did_deposit_1, colour = "Did Deposit"))+
+labs(x = 'Difference in days from term start date'
+       , y = 'Number of logins on that day'
+       , title = "Clustering Logins over Time") +
+  theme(plot.title = element_text(size = 20)
+        ,axis.title = element_text(size = 15, color = '#555555')
+        ,axis.title.y = element_text(size = 15, color = '#555555')
+        ) + coord_cartesian(xlim = c(-400, 10))  + scale_color_manual(values=c("royalblue1", "mediumseagreen", "lightcoral"))
+```
+#9
+```{r}
+ggplot(Data_login, aes(x = diff_in_days)) + 
+  geom_line(aes(y = Sum_logins_not_deposit_1, colour = "Not Deposit"))+
+  geom_line(aes(y = Sum_logins_did_deposit_1, colour = "Did Deposit"))+
+labs(x = 'Difference in days from term start date'
+       , y = 'Number of logins on that day'
+       , title = "Clustering Logins over Time") +
+  theme(plot.title = element_text(size = 20)
+        ,axis.title = element_text(size = 15, color = '#555555')
+        ,axis.title.y = element_text(size = 15, color = '#555555')
+        ) + coord_cartesian(xlim = c(-164, 10)) + scale_color_manual(values=c("mediumseagreen", "lightcoral")) + scale_x_continuous(breaks = scales::pretty_breaks(n = 10))
+```
+
+Data Manipulation
+```{r}
+message5 <- message
+message5$delivered_date <- as.Date(message5$delivered)
+```
+
+```{r}
+library(dplyr)
+library(tidyr)
+data_message <- dplyr::full_join(message5, message2, by="identity", all=TRUE)
+data_message <- dplyr::full_join(data_message, message3, by="identity", all=TRUE)
+data6 <- dplyr::full_join(data_message, appbase, by="identity", all=TRUE)
+```
+
+```{r}
+data6$diff_in_days_msg <- difftime(data6$delivered_date, data6$`Term Start`, units = c("days"))
+data6$count <- 1
+```
+
+```{r}
+library(dplyr)
+library(tidyr)
+data7 <- data6 %>% group_by(diff_in_days_msg) %>% summarize(sum(count))
+```
