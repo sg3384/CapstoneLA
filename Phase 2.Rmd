@@ -408,7 +408,7 @@ Data_login$Sum_logins_not_deposit_1 <- scale(Data_login$Sum_logins_not_deposit)
 Data_login$Sum_logins_all_1 <- scale(Data_login$Sum_logins_all)
 Data_login$Sum_logins_did_deposit_1 <- scale(Data_login$Sum_logins_did_deposit)
 ```
-#8
+#7
 ```{r}
 ggplot(Data_login, aes(x = diff_in_days)) + 
   geom_line(aes(y = Sum_logins_all_1, colour = "All")) + 
@@ -422,7 +422,7 @@ labs(x = 'Difference in days from term start date'
         ,axis.title.y = element_text(size = 15, color = '#555555')
         ) + coord_cartesian(xlim = c(-400, 10))  + scale_color_manual(values=c("royalblue1", "mediumseagreen", "lightcoral"))
 ```
-#9
+#8
 ```{r}
 ggplot(Data_login, aes(x = diff_in_days)) + 
   geom_line(aes(y = Sum_logins_not_deposit_1, colour = "Not Deposit"))+
@@ -440,23 +440,51 @@ Data Manipulation
 ```{r}
 message5 <- message
 message5$delivered_date <- as.Date(message5$delivered)
-```
-
-```{r}
-library(dplyr)
-library(tidyr)
 data_message <- dplyr::full_join(message5, message2, by="identity", all=TRUE)
 data_message <- dplyr::full_join(data_message, message3, by="identity", all=TRUE)
 data6 <- dplyr::full_join(data_message, appbase, by="identity", all=TRUE)
-```
-
-```{r}
 data6$diff_in_days_msg <- difftime(data6$delivered_date, data6$`Term Start`, units = c("days"))
 data6$count <- 1
-```
-
-```{r}
 library(dplyr)
 library(tidyr)
-data7 <- data6 %>% group_by(diff_in_days_msg) %>% summarize(sum(count))
+data7 <- data6 %>% group_by(diff_in_days_msg) %>% summarize(sum(sum_num_of_message))
+data7 <- setNames(data7, c("diff_in_days", "number_msg_sent"))
+```
+
+
+```{r}
+data9 <- data8[c(1,2,6)]
+data9$number_msg_sent <- scale(data9$number_msg_sent)
+
+
+data10 <- data8[c(1,2,8)]
+data10$number_msg_sent <- scale(data10$number_msg_sent)
+
+```
+9
+```{r}
+ggplot(data9, aes(x = diff_in_days)) + 
+  geom_line(aes(y = number_msg_sent, colour = "msg_notdeposit")) + 
+  geom_line(aes(y = Sum_logins_not_deposit_1, colour = "login_notdeposit"))+
+labs(x = 'Difference in days from term start date'
+       , y = 'Number of logins on that day'
+       , title = "Messages delivered from term start") +
+  theme(plot.title = element_text(size = 20)
+        ,axis.title = element_text(size = 15, color = '#555555')
+        ,axis.title.y = element_text(size = 15, color = '#555555')
+        ) + coord_cartesian(xlim = c(-200, 10))
+```
+
+10
+```{r}
+ggplot(data10, aes(x = diff_in_days)) + 
+  geom_line(aes(y = number_msg_sent, colour = "msg_diddeposit")) + 
+  geom_line(aes(y = Sum_logins_not_deposit_1, colour = "login_diddeposit"))+
+labs(x = 'Difference in days from term start date'
+       , y = 'Number of logins on that day'
+       , title = "Messages delivered from term start") +
+  theme(plot.title = element_text(size = 20)
+        ,axis.title = element_text(size = 15, color = '#555555')
+        ,axis.title.y = element_text(size = 15, color = '#555555')
+        ) + coord_cartesian(xlim = c(-200, 10))
 ```
