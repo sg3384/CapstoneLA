@@ -27,6 +27,26 @@ library("dplyr")
 library("tidyr")
 library("rpart")
 ```
+read data
+
+```{r}
+A1<-dplyr::select(ApplicationBase,identity,EverDeposited,Scholarship_app,permanent_country)
+A2<--dplyr::select(PersonGRE,identity,Total)
+A3<-dplyr::select(PersonSchools,identity,gpa,earned_degree)
+A4<-dplyr::select(ApplicationDecisions,identity,decision_name)
+A5<-dplyr::full_join(A1,A2,by="identity", all=TRUE)
+A6<-dplyr::full_join(A3,A4,by="identity", all=TRUE???
+DF<-dplyr::full_join(A6,A5,by="identity", all=TRUE???
+A5<-na.omit(A5)
+```
+
+```{r}
+A5$earned_degree<-ifelse(A5$earned_degree=="Y",1,0)
+View(A5)
+A5$EverDeposited<-ifelse(A5$EverDeposited=="Y",1,0)
+View(A5)
+```
+
 ```{r}
 set.seed(1)
 sub<-sample(1:nrow(A5),round(nrow(A5)*2/3))
