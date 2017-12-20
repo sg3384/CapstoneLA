@@ -6,10 +6,10 @@ output: html_document
 ---
 
 Content of the RMarkdown
-. Hierarchical clustering analysis
-. All Data: Login deposited vs not deposited
-. All Data: Messages vs Login - deposited
-. All Data: Messages vs Login - not deposited
+- Hierarchical clustering analysis
+- All Data: Login deposited vs not deposited
+- All Data: Messages vs Login - deposited
+- All Data: Messages vs Login - not deposited
 
 
 ```{r}
