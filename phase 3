@@ -1,3 +1,11 @@
+---
+title: "Phase II"
+author: "Shreya and Francis"
+date: "December 19, 2017"
+output: html_document
+---
+
+
 ##Read & Merge Data
 
 ```{r}
@@ -87,3 +95,6 @@ ggplot(A7, aes(`Credits Req`,age_at_app))+ stat_density2d(aes(fill = ..level..),
 ggplot(A7, aes(`Credits Req`,Total))+ stat_density2d(aes(fill = ..level..), geom="polygon")+ scale_fill_continuous(high='darkred',low='purple')
 ggplot(A7, aes(Total,`Credits Req`))+ stat_density2d(aes(fill = ..level..), geom="polygon")+ scale_fill_continuous(high='darkred',low='purple')
 ```
+
+
+More selected Graphs from Phase 1 and 2 were presented with final findings and results - including those based on logins and messages.
