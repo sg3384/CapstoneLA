@@ -166,7 +166,7 @@ install.packages("dplyr")
 install.packages("tidyr")
 ```
 
-# Read Data
+Read Data
 ```{r}
 library(readxl)
 appbase <- read_excel("C:/Users/Shreya/Documents/GITHUB/Capstone/ApplicationBase.xlsx")
@@ -211,7 +211,7 @@ library(dplyr)
 message_main <- dplyr::full_join(message3, message2, by="identity")
 ```
 
-# Login Data
+Login Data
 ```{r}
 library(dplyr)
 library(tidyr)
@@ -220,7 +220,7 @@ login1 <- login %>% group_by(identity) %>% summarize(sum(count))
 login1 <- setNames(login1, c("identity", "sum_login_count"))
 ```
 
-# Application Base Data
+Application Base Data
 ```{r}
 appbase$sex_1 <- ifelse(appbase$sex == "NULL", "Not_Stated", appbase$sex)
 appbase$PrevApply_1 <- ifelse(appbase$PrevApply == "0", "No", "Yes")
@@ -271,13 +271,13 @@ appbase$credits_req_new <-
 table(appbase$credits_req_new)
 ```
 
-# Merging Data
+Merging Data
 ```{r}
 Data <- dplyr::full_join(appbase, login1, by="identity", all=TRUE)
 Data <- dplyr::full_join(Data, message_main, by="identity", all=TRUE)
 ```
 
-# Login Data more manipulation 
+Login Data more manipulation 
 spliting date and time
 ```{r}
 login2 <- login
@@ -300,7 +300,7 @@ hist(Data1$diff_in_days)
 
 
 
-# Final Data Visualizations - Clustering of Logins and Messages over Time
+Final Data Visualizations - Clustering of Logins and Messages over Time
 #1
 ```{r}
 library(ggplot2)
